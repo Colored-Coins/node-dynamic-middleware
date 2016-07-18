@@ -29,6 +29,24 @@ DynamicMiddleware.prototype.handler = function() {
 }
 
 /**
+ *	create an error handler that can be used by express/connect
+ *
+ *	@returns {Function} a connect/express error handling middleware
+ */
+DynamicMiddleware.prototype.errorHandler = function() {
+	var self = this
+
+	return function handle(err, req, res, next) {
+		if (self._disabled) {
+			res.statusCode = 404
+			return res.end()
+		}
+
+		self._middleware(err, req, res, next)
+	}
+}
+
+/**
  *	disable this middleware, once disable it will respond to requests with 404 status code
  *
  */

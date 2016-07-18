@@ -53,6 +53,17 @@ describe('DynamicMiddleware', function () {
 			handler = dm.handler()
 		})
 	})
+
+	it('wraps an error middleware', function (done) {
+		var error = {}
+		var errorDm = new DynamicMiddleware(function (err, req, res, next) {
+			expect(err).to.equal(error)
+			done()
+		})
+
+		var errorHandler = errorDm.errorHandler()
+		errorHandler(error)
+	})
 	
 	worksWith('connect 3', connect3(), function (app, handler) { app.use('/gee', handler) })
 	worksWith('express 3', express3(), function (app, handler) { app.use('/gee', handler) })
